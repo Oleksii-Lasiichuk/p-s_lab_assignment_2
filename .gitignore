@@ -7,8 +7,10 @@
 .RData
 .Ruserdata
 .Rbuildignore
+.html
 *.Rproj
 .DS_Store
 __pycache__/
 *.aux
 *.log
+
