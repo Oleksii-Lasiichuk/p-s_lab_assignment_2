@@ -1,0 +1,14 @@
+.Rhistory
+.RData
+.Rproj.user/
+.Ruserdata
+.Rhistory
+.Rproj.user
+.RData
+.Ruserdata
+.Rbuildignore
+*.Rproj
+.DS_Store
+__pycache__/
+*.aux
+*.log
