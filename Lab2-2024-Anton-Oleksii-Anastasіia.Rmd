@@ -524,11 +524,18 @@ the conclusions you have made!**
 
 **This task consists of two parts:**
 
-1.  **In this part, we discuss independence of random variables and its moments: expectation and variance.**
+1.  **In this part, we discuss independence of random variables and its
+    moments: expectation and variance.**
 
-    1.  Suppose we have a random variable $X$. Explain why $\mathbb{E}(\frac{1}{X}) \neq \frac{1}{\mathbb{E(X)}}$;
+    1.  Suppose we have a random variable $X$. Explain why
+        $\mathbb{E}(\frac{1}{X}) \neq \frac{1}{\mathbb{E(X)}}$;
 
-    2.  Let $X \sim \mathscr{N}(\mu,\sigma^2)$ with $\mu = teamidnumber$ and $\sigma^{2} = 2\times teamidnumber+7$. Simulate realizations $x_1,x_2,\dots,x_{100}$ of $X$ and $y_1,y_2,\dots,y_{100}$ of $Y := \frac{1}{X}$ to calculate the values of $\frac{1}{\overline{\textbf{X}}}$ and $\overline{\textbf{Y}}$. Comment on the received results;
+    2.  Let $X \sim \mathscr{N}(\mu,\sigma^2)$ with $\mu = teamidnumber$
+        and $\sigma^{2} = 2\times teamidnumber+7$. Simulate realizations
+        $x_1,x_2,\dots,x_{100}$ of $X$ and $y_1,y_2,\dots,y_{100}$ of
+        $Y := \frac{1}{X}$ to calculate the values of
+        $\frac{1}{\overline{\textbf{X}}}$ and $\overline{\textbf{Y}}$.
+        Comment on the received results;
 
 ```{r}
 teamidnumber <- 49
@@ -549,7 +556,13 @@ mean_Y
 
 ```
 
-    3.  Let $X$ and $Y$ be exponentially distributed r.v.'s with parameter $\lambda = 2$. Set $Z := \log{X} + 5$. Plot the Quantile-Quantile plot and scatterplot of $X$ and $Y$. Plot the Quantile-Quantile plot and scatterplot of $X$ and $Z$. Explain the results. Comment on the difference of relations between the pairs of random variables. Which pair of r.v.'s is dependent and which one is similar?
+    3.  Let $X$ and $Y$ be exponentially distributed r.v.'s with
+        parameter $\lambda = 2$. Set $Z := \log{X} + 5$. Plot the
+        Quantile-Quantile plot and scatterplot of $X$ and $Y$. Plot the
+        Quantile-Quantile plot and scatterplot of $X$ and $Z$. Explain
+        the results. Comment on the difference of relations between the
+        pairs of random variables. Which pair of r.v.'s is dependent and
+        which one is similar?
 
 ```{r}
 set.seed(123)
@@ -566,7 +579,12 @@ plot(X, Z, main="Scatterplot X vs Z")
 
     ------------------------------------------------------------------------
 
-2.  You toss a fair coin three times and a random variable $X$ records how many times the coin shows Heads. You convince your friend that they should play a game with the following payoff: every round (equivalent to three coin tosses) will cost £$1$. They will receive £$0.5$ for every coin showing Heads. What is the expected value and the variance of the random variable $Y := 0.5X-1$?
+2.  You toss a fair coin three times and a random variable $X$ records
+    how many times the coin shows Heads. You convince your friend that
+    they should play a game with the following payoff: every round
+    (equivalent to three coin tosses) will cost £$1$. They will receive
+    £$0.5$ for every coin showing Heads. What is the expected value and
+    the variance of the random variable $Y := 0.5X-1$?
 
     To answer this,
 
@@ -580,7 +598,12 @@ plot(X, Z, main="Scatterplot X vs Z")
 
         -   Uniformly distributed
 
-    2.  What are the expected value and variance of X? Simulate realizations $x_1,x_2,\dots,x_{100}$ of $X$ to calculate the values of sample mean $\overline{\mathbf{X}}$ and sample variance $s^2 = \frac{\sum_{i=1}^{n}{(x_i - \overline{x})^{2}}}{n-1}$. Comment on the results;
+    2.  What are the expected value and variance of X? Simulate
+        realizations $x_1,x_2,\dots,x_{100}$ of $X$ to calculate the
+        values of sample mean $\overline{\mathbf{X}}$ and sample
+        variance
+        $s^2 = \frac{\sum_{i=1}^{n}{(x_i - \overline{x})^{2}}}{n-1}$.
+        Comment on the results;
 
 ```{r}
 set.seed(123)
@@ -593,7 +616,12 @@ mean_X
 var_X
 ```
 
-    3.  What are the expected value and variance of Y? Simulate realizations $y_1,y_2,\dots,y_{100}$ of $Y$ to calculate the values of sample mean $\overline{\mathbf{Y}}$ and sample variance $s^2 = \frac{\sum_{i=1}^{n}{(y_i - \overline{y})^{2}}}{n-1}$. Comment on the results;
+    3.  What are the expected value and variance of Y? Simulate
+        realizations $y_1,y_2,\dots,y_{100}$ of $Y$ to calculate the
+        values of sample mean $\overline{\mathbf{Y}}$ and sample
+        variance
+        $s^2 = \frac{\sum_{i=1}^{n}{(y_i - \overline{y})^{2}}}{n-1}$.
+        Comment on the results;
 
 ```{r}
 Y <- 0.5*X - 1
