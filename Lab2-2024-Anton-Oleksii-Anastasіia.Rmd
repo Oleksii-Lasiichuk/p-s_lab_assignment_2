@@ -537,13 +537,24 @@ the conclusions you have made!**
         $\frac{1}{\overline{\textbf{X}}}$ and $\overline{\textbf{Y}}$.
         Comment on the received results;
 
-        ```{r}
-        mu <- 0 #change this!
-        sigma <- 1 #change this
-        N <- 100
+```{r}
+teamidnumber <- 49
+mu <- teamidnumber
+sigma <- sqrt(2*teamidnumber + 7)
+N <- 100
 
-        # YOUR CODE HERE
-        ```
+set.seed(123)
+X <- rnorm(N, mean=mu, sd=sigma)
+Y <- 1 / X
+
+inv_mean_X <- 1 / mean(X)
+mean_Y <- mean(Y)
+
+inv_mean_X
+mean_Y
+
+
+```
 
     3.  Let $X$ and $Y$ be exponentially distributed r.v.'s with
         parameter $\lambda = 2$. Set $Z := \log{X} + 5$. Plot the
@@ -553,9 +564,18 @@ the conclusions you have made!**
         pairs of random variables. Which pair of r.v.'s is dependent and
         which one is similar?
 
-        ```{r}
-        # YOUR CODE HERE
-        ```
+```{r}
+set.seed(123)
+X <- rexp(100, rate=2)
+Y <- rexp(100, rate=2)
+Z <- log(X) + 5
+
+qqplot(X, Y); abline(0,1, col="red")
+plot(X, Y, main="Scatterplot X vs Y")
+
+qqplot(X, Z); abline(0,1, col="blue")
+plot(X, Z, main="Scatterplot X vs Z")
+```
 
     ------------------------------------------------------------------------
 
@@ -585,9 +605,16 @@ the conclusions you have made!**
         $s^2 = \frac{\sum_{i=1}^{n}{(x_i - \overline{x})^{2}}}{n-1}$.
         Comment on the results;
 
-        ```{r}
-        # YOUR CODE HERE
-        ```
+```{r}
+set.seed(123)
+X <- rbinom(100, size=3, prob=0.5)
+
+mean_X <- mean(X)
+var_X <- var(X)
+
+mean_X
+var_X
+```
 
     3.  What are the expected value and variance of Y? Simulate
         realizations $y_1,y_2,\dots,y_{100}$ of $Y$ to calculate the
@@ -596,12 +623,21 @@ the conclusions you have made!**
         $s^2 = \frac{\sum_{i=1}^{n}{(y_i - \overline{y})^{2}}}{n-1}$.
         Comment on the results;
 
-        ```{r}
-        # YOUR CODE HERE
-        ```
+```{r}
+Y <- 0.5*X - 1
 
-**Do not forget to include several sentences summarizing your work and
-the conclusions you have made!**
+mean_Y <- mean(Y)
+var_Y <- var(Y)
+
+mean_Y
+var_Y
+```
+
+**Summary and Conclusions**
+
+This task explored properties of random variables and their moments. Simulations confirmed that E(1/X) ≠ 1/E(X) for a normal variable. QQ-plots and scatterplots showed that independent variables X and Y are uncorrelated, while X and Z = log(X)+5 are dependent.
+
+For the coin-toss game, X is binomial and the sample mean and variance of X and Y = 0.5X-1 closely match theoretical values. The expected payoff is negative, showing the game is disadvantageous. Overall, the results illustrate the Law of Large Numbers, functional dependence, and behavior of expectations and variances under transformations.
 
 ------------------------------------------------------------------------
 
