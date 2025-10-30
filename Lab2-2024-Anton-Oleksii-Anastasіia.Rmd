@@ -347,9 +347,9 @@ cat("lambda =", lambda, "\nN =", N, "\nmu =", mu, "\n")
 
 ```{r}
 mu <- mu
+n <- 5      # sample size
 sigma <- sqrt(mu / n)
 K <- 1e3    # number of repetitions
-n <- 5      # sample size
 sample_means <- colMeans(matrix(rpois(n*K, lambda = mu), nrow = n))
 cat("Normal approximation: mean =", mu, " sd =", sigma, "\n")
 ```
