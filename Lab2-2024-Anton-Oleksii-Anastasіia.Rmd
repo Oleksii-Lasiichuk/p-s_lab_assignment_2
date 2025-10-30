@@ -749,10 +749,12 @@ For the coin-toss game, X is binomial and the sample mean and variance of X and 
 
 In this lab, we successfully applied core probability concepts using R.
 
-- Task 1: We simulated a [7,4] Hamming code, confirming its $\approx 7\%$ success rate on a high-noise ($p=0.49$) channel, proving it unsuitable.
+- Task 1: We simulated a [7,4] Hamming code, confirming its $\approx 7\%$ success rate on a high-noise ($p=0.49$) channel, proving it bad for such tasks.
 
 - Task 2: We modeled Poisson radioactive decay, verified the CLT for sample means, and found the CLT provided the tightest theoretical bound for safe sample storage.
 
-- Task 3: We analyzed exponential Geiger clicks, again confirming the CLT, and used a Normal approximation to find a safe sample limit ($N=83$), which our simulation validated.
+- Task 3: We analyzed exponential Geiger clicks, again confirming the CLT, and used a Normal approximation to find a safe sample limit ($N=83$), which our simulation approved.
 
-- Task 4: We demonstrated $E[1/X] \neq 1/E[X]$ (Jensen's inequality), used scatterplots to distinguish between independent and functionally dependent variables, and calculated the negative expected payoff of a Binomial game.Overall, the lab provided practical experience using R to verify the LLN and CLT
+- Task 4: We demonstrated $E[1/X] \neq 1/E[X]$ (Jensen's inequality), used scatterplots to distinguish between independent and functionally dependent variables, and calculated the negative expected payoff of a Binomial game.
+
+Overall, the lab provided practical experience using R to verify the LLN and CLT.
