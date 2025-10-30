@@ -487,36 +487,140 @@ safety limits in laboratory settings.
 #### First, generate samples an sample means:
 
 ```{r}
-nu1 <- 1  # change this!
-K <- 1e3
-n <- 5
-sample_means <- colMeans(matrix(rexp(n*K, rate = nu1), nrow=n))
+id <- 49
+nu1 <- id + 10
+rate1 <- 1 / nu1
+
+K <- 1000
+n_values <- c(5, 10, 50) 
+
+# Set up plot area for 3 plots
+par(mfrow = c(1, 3))
+
+# this loop runs the simulation for each n in n_values
+for (n in n_values) {
+  # generate K sample means, each from a sample of size n
+  sample_means <- colMeans(matrix(rexp(n * K, rate = rate1), nrow = n))
+
+  # theoretical mean and standard deviation for the bell curve (from CLT)
+  mu_normal <- nu1
+  sigma_normal <- sqrt(nu1^2 / n)
+
+  # plot the cdf from our simulated data (the ecdf)
+  plot(ecdf(sample_means),
+       col = "blue",
+       lwd = 2,
+       main = paste("ECDF vs. Normal CDF (n =", n, ")"),
+       xlab = "Sample Mean", ylab = "Probability")
+
+  # overlay the perfect theoretical bell curve cdf
+  curve(pnorm(x, mean = mu_normal, sd = sigma_normal), 
+        col = "red", lwd = 2, add = TRUE)
+  
+  # we check how far apart the blue and red lines are
+  x_grid <- seq(mu_normal - 4*sigma_normal, mu_normal + 4*sigma_normal, length.out=500)
+  max_diff <- max(abs(ecdf(sample_means)(x_grid) - pnorm(x_grid, mean = mu_normal, sd = sigma_normal)))
+  
+  cat(paste("For n =", n, ", the max difference is:", round(max_diff, 4), "\n"))
+}
+
+# reset the plot grid
+par(mfrow = c(1, 1))
 ```
+As you can see from the plots, when the sample size n is small (like $n=5$), the blue line (our data) doesn't perfectly match the red line. But as n gets bigger, the blue line gets more like red line. The "max difference" we printed gets smaller and smaller. So it is exactly what CLT says: the larger the sample size, the more the distribution of the sample means looks like a perfect normal distribution.
+
 
 #### Next, calculate the parameters of the standard normal approximation
 
 ```{r}
-mu <- 0       # change this!
-sigma <- 1    # change this!
+# This code assumes nu1=59 from the previous chunk
+# and that we are plotting for n=50, the last value in the loop.
+n <- 50
+mu <- nu1 
+sigma <- nu1 / sqrt(n)
+
+# You can print them to check
+cat("Plotting for n =", n, "\n")
+cat("Theoretical Mean:", mu, "\n")
+cat("Theoretical Standard deviation - sigma:", sigma, "\n")
 ```
 
 #### We can now plot ecdf and cdf
 
 ```{r}
-xlims <- c(mu-3*sigma,mu+3*sigma)
+# Set the plot limits to 3 standard deviations around the mean
+xlims <- c(mu - 3*sigma, mu + 3*sigma)
+
+# Get the ecdf function from our simulated data
 Fs <- ecdf(sample_means)
+
+# Plot the ECDF (blue step-plot)
 plot(Fs, 
      xlim = xlims, 
      col = "blue",
      lwd = 2,
-     main = "Comparison of ecdf and cdf")
+     main = "Comparison of ECDF and Normal CDF (n=50)",
+     xlab = "Sample Mean",
+     ylab = "Cumulative Probability")
+
+# Add the theoretical Normal CDF (red smooth curve)
 curve(pnorm(x, mean = mu, sd = sigma), col = "red", lwd = 2, add = TRUE)
+
+legend("bottomright", legend = c("Empirical CDF (n=50)", "Theoretical Normal CDF"),
+       col = c("blue", "red"), lwd = 2)
 ```
 
-**Next, proceed with all the remaining steps**
+#### Safety Calculation
+Here, we need to find the maximum number of samples, N, that can be safely stored.The "safe" condition is: "number of clicks in one minute (60 seconds) does not exceed 100."Let Y be the number of clicks in 60 seconds.From Part 1, the mean time for one sample is nu1 = 59. The rate is rate1 = 1/nu1.The prompt states the rate is proportional to N, so the total rate is rate_N = N * rate1 = N / 59 clicks/sec.Y, the number of clicks in 60 seconds, follows a Poisson distribution:Y \sim \text{Poisson}(\text{mu} = 60 * rate_N = 60 * N / 59).We want to find the largest integer N such that P(Y \le 100) \ge 0.95$.
 
-**Do not forget to include several sentences summarizing your work and
-the conclusions you have made!**
+1. Markov's Inequality: $P(Y > 100) \le E[Y] / 100$.
+We need $E[Y] / 100 \le 0.05 \implies E[Y] \le 5$.$\text{mu} = 60 \times N / 59 \le 5 \implies N \le (5 \times 59) / 60 \approx 4.91$.
+So, Markov's bound suggests $N \le 4$.
+
+2. CLT (Poisson Approximation): Since $\text{mu}$ will be large, we can approximate the Poisson $Y$ as a Normal distribution: $Y \approx \text{Normal}(\text{mu}, \text{variance} = \text{mu})$.
+We want $P(Y \le 100) \ge 0.95$. Using continuity correction: $P(Y \le 100.5) \ge 0.95$.
+Standardizing: $P(Z \le (100.5 - \text{mu}) / \text{sqrt}(\text{mu})) \ge 0.95$.
+The z-score for 0.95 is qnorm(0.95) which is approx 1.645.
+$(100.5 - \text{mu}) / \text{sqrt}(\text{mu}) \ge 1.645 \implies 100.5 - \text{mu} \ge 1.645 \times \text{sqrt}(\text{mu})$.
+Let $x = \text{sqrt}(\text{mu})$. We get $x^2 + 1.645x - 100.5 \le 0$.
+Solving $x^2 + 1.645x - 100.5 = 0$ gives $x \approx 9.21$.
+So $\text{mu} \le 9.21^2 \approx 84.8$.
+$60 \times N / 59 \le 84.8 \implies N \le (84.8 \times 59) / 60 \approx 83.3$.
+The CLT bound suggests $N \le 83$.
+
+
+
+Now we can simulate the process with $N=83$ and check the probability. $S_{100} = X_1 + \dots + X_{100}$. The event "at most 100 clicks in 60s" ($Y \le 100$) is almostt the same as "the time to the 100th click is 60s or more" ($S_{100} \ge 60$). We will simulate $S_{100}$ and check this.
+```{r}
+# Use N=83 based on CLT(Poisson) bound
+N_clt <- 83
+nu_N <- nu1 * N_clt
+rate_N <- N_clt / nu1
+
+K_sim <- 10000
+# we simulate the time to the 100th click, S_100
+# S_100 is a sum of 100 exponentials, which is Gamma(shape=100, rate=rate_N)
+s_samples <- rgamma(K_sim, shape = 100, rate = rate_N)
+
+# We check the probability P(S_100 >= 60)
+# it is basically the same as "100 clicks took at least 60 seconds"
+# what is "at most 100 clicks in 60s".
+prob_safe <- mean(s_samples >= 60)
+
+cat("Simulation for N =", N_clt, "\n")
+cat("Rate per second (lambda_N):", rate_N, "\n")
+cat("Expected time for 100 clicks (E[S_100]):", 100 / rate_N, "sec\n")
+cat("Empirical probability of S_100 >= 60 sec:", prob_safe, "\n")
+
+hist(s_samples, breaks=50, probability=TRUE,
+     main=paste("Histogram of S_100 (Time to 100 Clicks) for N =", N_clt),
+     xlab="Time (seconds)", col="lightblue")
+abline(v=60, col="red", lwd=2, lty=2)
+legend("topright", "Safety Threshold (60s)", col="red", lty=2, lwd=2)
+```
+
+
+So, in this task, we first proved that the Central Limit Theorem works. We saw in Part 1 that even when we started with the weird, exponential distribution, the averages of our samples started to look like a normal. Our plots for $n=50$ matched the theoretical red line almost perfectly, which was cool to see.In Part 2, we used this exact same idea to solve the safety problem. We figured out that the number of clicks in one minute (a Poisson distribution) would also act like a bell curve because the numbers were so big. This let us calculate the max number of samples ($N$) that could be stored safely. Our CLT calculation gave the most realistic answer ($N=84$), and our final simulation proved it was correct, giving us almost exactly the 95% safety probability we were looking for. It shows that the CLT is super useful for approximating problems like this.
 
 ------------------------------------------------------------------------
 
@@ -643,5 +747,12 @@ For the coin-toss game, X is binomial and the sample mean and variance of X and 
 
 ### General summary and conclusions
 
-Summarize here what you've done, whether you solved the tasks, what
-difficulties you had etc.
+In this lab, we successfully applied core probability concepts using R.
+
+- Task 1: We simulated a [7,4] Hamming code, confirming its $\approx 7\%$ success rate on a high-noise ($p=0.49$) channel, proving it unsuitable.
+
+- Task 2: We modeled Poisson radioactive decay, verified the CLT for sample means, and found the CLT provided the tightest theoretical bound for safe sample storage.
+
+- Task 3: We analyzed exponential Geiger clicks, again confirming the CLT, and used a Normal approximation to find a safe sample limit ($N=83$), which our simulation validated.
+
+- Task 4: We demonstrated $E[1/X] \neq 1/E[X]$ (Jensen's inequality), used scatterplots to distinguish between independent and functionally dependent variables, and calculated the negative expected payoff of a Binomial game.Overall, the lab provided practical experience using R to verify the LLN and CLT
